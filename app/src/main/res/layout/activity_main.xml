@@ -11,6 +11,15 @@
     tools:context=".MainActivity"
     tools:ignore="ExtraText">
 
+    <Button
+        android:id="@+id/history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/history"
+        android:backgroundTint="#D3D3D3"
+        android:textColor="@color/black"
+        android:textSize="20sp"/>
+
     <TextView
         android:id="@+id/result"
         android:layout_width="match_parent"

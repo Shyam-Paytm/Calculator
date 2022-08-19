@@ -1,7 +1,13 @@
 package com.example.calculator.functions
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
+import com.example.calculator.Databases.HistoryDB
+import com.example.calculator.models.HistoryDoa
+import com.example.calculator.schemas.History
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.objecthunter.exp4j.ExpressionBuilder
 import java.lang.ArithmeticException
 
@@ -15,8 +21,12 @@ class Calculator {
 
     private var context: Context? = null
 
+    private var historyDB: HistoryDoa? = null
+
+
     fun setContext(con: Context) {
         context = con
+        historyDB = HistoryDB.getHistoryDB(con).getHistoryDao()
     }
 
     fun clearText(): String {
@@ -48,7 +58,15 @@ class Calculator {
                 lastNumeric = true
                 lastDot = true
                 val expression = ExpressionBuilder(value).build()
-                return expression.evaluate().toString()
+                val result = expression.evaluate().toString()
+
+                // Add Value and its Result in Database
+                GlobalScope.launch {
+                    val historyData = History(expression = value, result = result)
+                    historyDB?.addHistory(historyData)
+                }
+
+                return result
             }
         } catch (err: ArithmeticException) {
             // Show Toast on Error
@@ -106,5 +124,9 @@ class Calculator {
         lastNumeric = true
         if (value == "0") return num.toString()
         return value + num.toString()
+    }
+
+    suspend fun getHistory(): List<History>? {
+        return historyDB?.getAll()
     }
 }

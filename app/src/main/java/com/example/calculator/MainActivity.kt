@@ -1,5 +1,6 @@
 package com.example.calculator
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -74,6 +75,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        // On Clicking History button,move to new Page
+        binding.history.setOnClickListener {
+            val intent = Intent(this, HistoryActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     // When Orientation change, value will be sustained
